@@ -47,7 +47,7 @@ export class MainPage extends React.Component{
               Race: 'niedziela'
             }
         ]
-        fetch(`http://ergast.com/api/f1/${data}.json`, this.requestOption)
+        fetch(`https://ergast.com/api/f1/current.json`, this.requestOption)
         .then(response => response.json())
         .then(result => {
             const data_races = [result]
