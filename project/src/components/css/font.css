@@ -17,3 +17,8 @@
     font-family: F1-Wide;
     src: url('../fonts/Formula1-Wide.ttf');
 }
+
+@font-face {
+    font-family: F1-Button;
+    src: url('../fonts/TitilliumWeb-Regular.ttf');
+}

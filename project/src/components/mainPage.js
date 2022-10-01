@@ -1,6 +1,6 @@
 import React from "react";
-import './css/mainPage.css'
-import './css/font.css'
+import { BiUser } from "react-icons/bi"
+import ProgressBar from "@ramonak/react-progress-bar";
 
 export class MainPage extends React.Component{
     constructor(props){
@@ -8,8 +8,18 @@ export class MainPage extends React.Component{
             this.state = {
                 raceName: "",
                 date: new Date().getFullYear(),
-                loading: false,
+                userVoted: false,
+                firstDriverVotes: 0,
+                secondDriverVotes: 0,
+                allVotes: 0,
+                firstVoteDriver: '',
+                firstDriverNumber: 0,
+                firstDriverDateOfBirth: '',
+                firstVoteSecondDriver: '',
+                firstVoteSecondDriverDateOfBirth: '',
+                firstVoteSecondDriverNumber: 0,
         }
+        this.setVotes =  this.setVotes.bind(this)
     }
 
     requestOption = {
@@ -71,25 +81,125 @@ export class MainPage extends React.Component{
         .catch(error => console.error(error))
     }
 
+
+
+
+    setVotes(driver){
+        if(driver === this.state.firstVoteDriver){
+            var votes = this.state.firstDriverVotes
+            var allVotes = this.state.allVotes
+            this.setState({
+                userVoted: true,
+                firstDriverVotes: ++votes,
+                allVotes: ++allVotes,
+            })
+        }else if(driver === this.state.firstVoteSecondDriver){
+            var votes1 = this.state.secondDriverVotes
+            var allVotes1 = this.state.allVotes
+            this.setState({
+                userVoted: true,
+                secondDriverVotes: ++votes1,
+                allVotes: ++allVotes1,
+            })
+    }
+}
+
     displayData(data){
         this.setState({
             raceName: data.raceName,
+            firstVoteDriver: 'Max Verstappen',
+            firstDriverNumber: '1',
+            firstDriverDateOfBirth: '30/09/1997',
+            firstVoteSecondDriver: 'Charles Lecrlec',
+            firstVoteSecondDriverNumber: '16',
+            firstVoteSecondDriverDateOfBirth: '16/10/1997',
         })
     }
 
+
+
+
     render(){
+        const voted = this.state.userVoted
+        const renderResults = () => {
+            if(voted === true){
+                const allVotes = this.state.allVotes
+                const firstDriverVotes = this.state.firstDriverVotes
+                const secondDriverVotes = this.state.secondDriverVotes
+                    return(
+                        <>
+                        <div className="first-vote-container">
+                            <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Actual results of poll {this.state.date} {this.state.raceName}</h1>
+                        <div className="results-container">
+                            <div className="results-first-driver">
+                                 <img className="image-driver-results" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver}/>
+                                 <h3 className="first-driver-name" style={{fontFamily: 'F1-Regular', marginTop: '60px', marginLeft:'10px'}}>Driver name: {this.state.firstVoteDriver}</h3>
+                            <ProgressBar 
+                               className="progress-bar-first"
+                               completed={firstDriverVotes}
+                               height="30px"
+                               width="300px"
+                               bgColor="#E10600"
+                               fontFamily='F1-Regular'
+                               labelAlignment="outside"
+                               labelColor="#000"
+                               maxCompleted={allVotes}
+                               customLabel={`${firstDriverVotes} votes for this driver / ${allVotes} all votes `}
+                               />
+                            </div>
+                            <div className="results-second-driver">
+                                 <img className="image-driver-results" src="https://www.formula1.com/content/fom-website/en/drivers/charles-leclerc/jcr:content/image.img.1920.medium.jpg/1646818893219.jpg" alt={this.state.firstVoteSecondDriver}/>
+                                 <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginTop: '-140px', marginLeft:'220px'}}>Driver name: {this.state.firstVoteSecondDriver}</h3>
+                            <ProgressBar 
+                               className="progress-bar-second"
+                               completed={secondDriverVotes}
+                               height="30px"
+                               width="300px"
+                               bgColor="#E10600"
+                               fontFamily='F1-Regular'
+                               labelAlignment="outside"
+                               labelColor="#000"
+                               maxCompleted={allVotes}
+                               customLabel={`${secondDriverVotes} votes for this driver / ${allVotes} all votes `}
+                               />
+                            </div>
+                        </div>
+                        </div> 
+                        </>
+                    )
+            }
+        }
         return(
              <>
                <div className="header">
                 <h1 className="page-title" style={{fontFamily: 'F1-Regular'}}>F1 Vote for Winner -</h1>
                 <p className="actual-grandprix" style={{fontFamily: 'F1-Regular'}}>{this.state.date} {this.state.raceName}</p>
+                <button className="sign-in-admin" style={{fontFamily: 'F1-Button'}}><BiUser style={{position: 'relative', top: '2px'}}/> Sign In</button>
                </div>
-               
-               <div className='content-container'>  
+               <div className='content-container'>
+               {voted === false &&
                  <div className='first-vote-container'>
-
-                    
+                    <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Who will win {this.state.date} {this.state.raceName}?</h1>
+                    <div className="first-driver-container">
+                          <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.setVotes(this.state.firstVoteDriver)}/>
+                       <div className="first-driver-info-content">
+                          <h3 className="first-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteDriver}</h3>
+                          <h3 className="first-driver-number" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver number: {this.state.firstDriverNumber}</h3>
+                          <h3 className="first-driver-birth" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver date of birth: {this.state.firstDriverDateOfBirth}</h3>
+                       </div>
                     </div> 
+                    <div className="second-driver-container">
+                        <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/charles-leclerc/jcr:content/image.img.1920.medium.jpg/1646818893219.jpg" alt={this.state.firstVoteSecondDriver} onClick={() => this.setVotes(this.state.firstVoteSecondDriver)}/>            
+                    <div className="second-driver-info-content">
+                        <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteSecondDriver}</h3>   
+                        <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver number: {this.state.firstVoteSecondDriverNumber}</h3>   
+                        <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver date of birth: {this.state.firstVoteSecondDriverDateOfBirth}</h3>   
+                    </div>   
+                    </div>  
+                    </div> 
+                  }{
+                    renderResults()
+                  }
                </div>
                
              </>
