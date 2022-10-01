@@ -1,0 +1,54 @@
+/* html, body */
+
+html{
+    height: 100%;
+}
+
+body{
+    min-height:100vh;
+}
+
+
+/* header */
+
+.header{
+    background-color: #E10600;
+    position: relative;
+    top: 0;
+    width:  100%;
+    height: 70px;
+    padding: 5px;
+}
+
+.page-title{
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 240px;
+    color: #fff;
+    text-transform: capitalize;
+    text-transform: uppercase;
+}
+.actual-grandprix{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-left: 515px;
+    margin-top: -48px;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+/* header end */
+
+/* content */
+.content-container{
+    margin:225px auto;
+    height: auto;
+    width: 100%;
+}
+
+.first-vote-container{
+    margin: 0 auto;
+    width: 1250px;
+    height: 300px;
+    border-radius: 25px;
+}
