@@ -18,6 +18,8 @@ export class MainPage extends React.Component{
                 firstVoteSecondDriver: '',
                 firstVoteSecondDriverDateOfBirth: '',
                 firstVoteSecondDriverNumber: 0,
+                raceRound: 0,
+                standings: []
         }
         this.setVotes =  this.setVotes.bind(this)
     }
@@ -32,7 +34,7 @@ export class MainPage extends React.Component{
         const year = date.getFullYear();
         const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
         let newDate = date.toISOString().slice(0,10)
-        //let newDate = '2022-06-23'
+        //let newDate = '2022-09-04'
         //const dayName = 'niedziela'
         this.fetchOption(year,newDate, dayName)
     }
@@ -113,13 +115,31 @@ export class MainPage extends React.Component{
             firstVoteSecondDriver: 'Charles Lecrlec',
             firstVoteSecondDriverNumber: '16',
             firstVoteSecondDriverDateOfBirth: '16/10/1997',
+            raceRound: data.round-1,
         })
+        this.fetchStanding(data.round)
+    }
+
+    fetchStanding(round){
+        const date = new Date();
+        const year = date.getFullYear();
+        fetch(`https://ergast.com/api/f1/${year}/${round-1}/driverStandings.json`)
+        .then((res) => res.json())
+        .then(result => {
+            const result1 = result.MRData.StandingsTable.StandingsLists[0].DriverStandings 
+            this.setState({
+                standings: result1,
+            })
+        })
+
     }
 
 
 
 
     render(){
+        const standingsLists = this.state.standings
+        console.log(standingsLists)
         const voted = this.state.userVoted
         const renderResults = () => {
             if(voted === true){
@@ -177,6 +197,16 @@ export class MainPage extends React.Component{
                 <button className="sign-in-admin" style={{fontFamily: 'F1-Button'}}><BiUser style={{position: 'relative', top: '2px'}}/> Sign In</button>
                </div>
                <div className='content-container'>
+                <div className="container-standing">
+                    <h1 className="standings" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Standings after round {this.state.raceRound}</h1>
+                    <div className='standings-content'>
+                        <ul className="standings-list">
+                        {standingsLists.map(item => (
+                                <li key={item.position}>Position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Points: {item.points}, Constructor: {item.Constructors[0].name}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
                {voted === false &&
                  <div className='first-vote-container'>
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Who will win {this.state.date} {this.state.raceName}?</h1>

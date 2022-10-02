@@ -41,13 +41,22 @@ body{
 
 /* content */
 .content-container{
-    margin:225px auto;
+    margin:145px auto;
     height: auto;
     width: 100%;
 }
 
 .first-vote-container{
+    margin-top: 30px;
     margin: 0 auto;
+    width: 1250px;
+    height: 300px;
+    border-radius: 25px;
+    border: 4px solid #E10600;
+}
+
+.container-standing{
+    margin: 55px auto;
     width: 1250px;
     height: 300px;
     border-radius: 25px;
@@ -169,4 +178,23 @@ body{
 .example-exit.example-exit-active{
     opacity: 0.01;
     transition: opacity 500ms ease-in;
+}
+
+/* list */
+
+.standings-list{
+    text-align: center;
+    list-style: none;
+    margin-top: -20px;
+    overflow:hidden; 
+    overflow-y:scroll;
+    height:230px; width:1210px;
+    padding: 10px 5px 5px 15px;
+    box-sizing: border-box;
+}
+
+li{
+    padding: 15px;
+    background: rgba(255, 255, 255, .1);
+    margin: 5px auto;
 }
