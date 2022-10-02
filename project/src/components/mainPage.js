@@ -2,6 +2,7 @@ import React from "react";
 import { BiUser } from "react-icons/bi"
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
+import { NoRace } from "./noRacePage";
 
 export class MainPage extends React.Component{
     constructor(props){
@@ -25,11 +26,13 @@ export class MainPage extends React.Component{
                 actualRaceStandings: [],
                 noActualRaceResults: true,
                 sesssionEnded: false,
+                noRaceDay: false,
         }
         this.submitVote = this.submitVote.bind(this);
         this.votesStateSet = this.votesStateSet.bind(this);
         this.votesDriverASet = this.votesDriverASet.bind(this);
         this.votesDriverBset = this.votesDriverBset.bind(this);
+        this.fetchOption = this.fetchOption.bind(this);
     }
 
     requestOption = {
@@ -49,7 +52,6 @@ export class MainPage extends React.Component{
                     (res) => {
                         const results = res.data
                         const results_length = results.length
-                        console.log(results)
                         const totalVotesA = results.map(item => item.driverA).reduce((prev,curr) => prev + curr, 0);
                         const totalVotesB = results.map(item => item.driverB).reduce((prev,curr) => prev + curr, 0);
                         this.votesStateSet(results_length)
@@ -97,7 +99,9 @@ export class MainPage extends React.Component{
                                 this.displayData(data)
                         }
                     }else{
-                        window.location.replace('/noraceday')
+                        this.setState({
+                            noRaceDay: true
+                        })
                     }
             }
         }
@@ -238,7 +242,7 @@ export class MainPage extends React.Component{
                                />
                             </div>
                         </div>
-                        </div> 
+                        </div>
                         </>
                     )
         }
@@ -246,6 +250,7 @@ export class MainPage extends React.Component{
         const standingsLists = this.state.standings
         const voted = this.state.userVoted
         const sessionEnded = this.state.sesssionEnded
+        const noRace = this.state.noRaceDay
         const renderRaceResults = () => {
             const acutalRaceStand = this.state.actualRaceStandings
             return (
@@ -266,6 +271,8 @@ export class MainPage extends React.Component{
         }
         return(
              <>
+             {noRace === false &&
+             <div>
                <div className="header">
                 <h1 className="page-title" style={{fontFamily: 'F1-Regular'}}>F1 Vote for Winner -</h1>
                 <p className="actual-grandprix" style={{fontFamily: 'F1-Regular'}}>{this.state.date} {this.state.raceName}</p>
@@ -299,18 +306,20 @@ export class MainPage extends React.Component{
                         <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteSecondDriver}</h3>   
                         <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver number: {this.state.firstVoteSecondDriverNumber}</h3>   
                         <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver date of birth: {this.state.firstVoteSecondDriverDateOfBirth}</h3>   
-                    </div>   
-                    </div>  
+                        </div>   
+                      </div>  
                     </div> 
                   }{voted === 'true' &&
                     this.renderResults()
                   }{sessionEnded === true &&
                     renderRaceResults()
-
                   }
-               </div>
-               
+                      </div>
+                  </div>
+             }{noRace === true &&
+                <NoRace />          
+             } 
              </>
         )
-}
+    }
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { MainPage } from './components/mainPage'
-import { NoRace } from './components/noRacePage';
+import { AdminPanelLogin } from './components/admin-panel/adminLogin';
 
 import {
   BrowserRouter as Router,
@@ -16,7 +16,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<MainPage/>} />
-        <Route path="/noraceday" element={<NoRace/>}/>
+        <Route path="/admin" element={<AdminPanelLogin  />} />
       </Routes>
     </Router>
     </>
