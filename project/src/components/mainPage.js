@@ -1,6 +1,7 @@
 import React from "react";
 import { BiUser } from "react-icons/bi"
 import ProgressBar from "@ramonak/react-progress-bar";
+import axios from "axios";
 
 export class MainPage extends React.Component{
     constructor(props){
@@ -8,7 +9,7 @@ export class MainPage extends React.Component{
             this.state = {
                 raceName: "",
                 date: new Date().getFullYear(),
-                userVoted: false,
+                userVoted: 'false',
                 firstDriverVotes: 0,
                 secondDriverVotes: 0,
                 allVotes: 0,
@@ -25,7 +26,8 @@ export class MainPage extends React.Component{
                 noActualRaceResults: true,
                 sesssionEnded: false,
         }
-        this.setVotes =  this.setVotes.bind(this)
+        this.submitVote = this.submitVote.bind(this);
+        this.votesStateSet = this.votesStateSet.bind(this);
     }
 
     requestOption = {
@@ -88,27 +90,37 @@ export class MainPage extends React.Component{
     }
 
 
-
-
-    setVotes(driver){
-        if(driver === this.state.firstVoteDriver){
-            var votes = this.state.firstDriverVotes
-            var allVotes = this.state.allVotes
+    votesStateSet(state){
+        if(state > 0){
             this.setState({
-                userVoted: true,
-                firstDriverVotes: ++votes,
-                allVotes: ++allVotes,
+                allVotes: state,
             })
-        }else if(driver === this.state.firstVoteSecondDriver){
-            var votes1 = this.state.secondDriverVotes
-            var allVotes1 = this.state.allVotes
+        }else if(state === 'true'){
+            console.log(state)
             this.setState({
-                userVoted: true,
-                secondDriverVotes: ++votes1,
-                allVotes: ++allVotes1,
+                userVoted: state,
             })
+        }
     }
+
+
+
+
+    submitVote(driver){
+      if(driver === this.state.firstVoteDriver){
+        axios
+        .post("https://6339bfb9383946bc7ff8296d.mockapi.io/voting",{
+            driverA: true
+        })
+      }else if(driver === this.state.firstVoteSecondDriver){
+        axios
+          .post("https://6339bfb9383946bc7ff8296d.mockapi.io/voting",{
+            driverB: true
+        })
+    }
+    this.votesStateSet('true')
 }
+
 
     displayData(data){
         this.setState({
@@ -153,17 +165,21 @@ export class MainPage extends React.Component{
     }
 
 
-
-
-    render(){
-        const standingsLists = this.state.standings
-        const voted = this.state.userVoted
-        const sessionEnded = this.state.sesssionEnded
-        const renderResults = () => {
-            if(voted === true){
-                const allVotes = this.state.allVotes
-                const firstDriverVotes = this.state.firstDriverVotes
-                const secondDriverVotes = this.state.secondDriverVotes
+      renderResults(){
+              const firstDriverVotes = this.state.firstVoteDriver
+              const secondDriverVotes = this.state.firstVoteSecondDriver
+              const allVotes = this.state.allVotes
+              axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
+                    (res) => {
+                        console.log(res.data)
+                        const results = res.data
+                        const results_length = results.length
+                        this.votesStateSet(results_length)
+                    },
+                    (err) => {
+                        console.log(err)
+                    }
+                    )
                     return(
                         <>
                         <div className="first-vote-container">
@@ -205,8 +221,11 @@ export class MainPage extends React.Component{
                         </div> 
                         </>
                     )
-            }
         }
+    render(){
+        const standingsLists = this.state.standings
+        const voted = this.state.userVoted
+        const sessionEnded = this.state.sesssionEnded
         const renderRaceResults = () => {
             const acutalRaceStand = this.state.actualRaceStandings
             return (
@@ -243,11 +262,11 @@ export class MainPage extends React.Component{
                         </ul>
                     </div>
                 </div>
-               {voted === false && sessionEnded === false &&
+               {voted === 'false' && sessionEnded === false &&
                  <div className='first-vote-container'>
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Who will win {this.state.date} {this.state.raceName}?</h1>
                     <div className="first-driver-container">
-                          <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.setVotes(this.state.firstVoteDriver)}/>
+                          <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.submitVote(this.state.firstVoteDriver)}/>
                        <div className="first-driver-info-content">
                           <h3 className="first-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteDriver}</h3>
                           <h3 className="first-driver-number" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver number: {this.state.firstDriverNumber}</h3>
@@ -255,7 +274,7 @@ export class MainPage extends React.Component{
                        </div>
                     </div> 
                     <div className="second-driver-container">
-                        <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/charles-leclerc/jcr:content/image.img.1920.medium.jpg/1646818893219.jpg" alt={this.state.firstVoteSecondDriver} onClick={() => this.setVotes(this.state.firstVoteSecondDriver)}/>            
+                        <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/charles-leclerc/jcr:content/image.img.1920.medium.jpg/1646818893219.jpg" alt={this.state.firstVoteSecondDriver} onClick={() => this.submitVote(this.state.firstVoteSecondDriver)}/>            
                     <div className="second-driver-info-content">
                         <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteSecondDriver}</h3>   
                         <h3 className="second-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver number: {this.state.firstVoteSecondDriverNumber}</h3>   
@@ -263,8 +282,8 @@ export class MainPage extends React.Component{
                     </div>   
                     </div>  
                     </div> 
-                  }{
-                    renderResults()
+                  }{voted === 'true' &&
+                    this.renderResults()
                   }{sessionEnded === true &&
                     renderRaceResults()
                   }
