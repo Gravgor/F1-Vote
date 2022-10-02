@@ -28,6 +28,8 @@ export class MainPage extends React.Component{
         }
         this.submitVote = this.submitVote.bind(this);
         this.votesStateSet = this.votesStateSet.bind(this);
+        this.votesDriverASet = this.votesDriverASet.bind(this);
+        this.votesDriverBset = this.votesDriverBset.bind(this);
     }
 
     requestOption = {
@@ -103,6 +105,20 @@ export class MainPage extends React.Component{
         }
     }
 
+    votesDriverASet(number){
+        this.setState({
+            firstDriverVotes: number,
+        })
+
+    }
+
+    votesDriverBset(number){
+        this.setState({
+            secondDriverVotes: number,
+        })
+
+    }
+
 
 
 
@@ -166,15 +182,18 @@ export class MainPage extends React.Component{
 
 
       renderResults(){
-              const firstDriverVotes = this.state.firstVoteDriver
-              const secondDriverVotes = this.state.firstVoteSecondDriver
+              const firstDriverVotes = this.state.firstDriverVotes
+              const secondDriverVotes = this.state.secondDriverVotes
               const allVotes = this.state.allVotes
               axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
                     (res) => {
-                        console.log(res.data)
                         const results = res.data
                         const results_length = results.length
+                        const totalVotesA = results.map(item => item.driverA).reduce((prev,curr) => prev + curr, 0);
+                        const totalVotesB = results.map(item => item.driverB).reduce((prev,curr) => prev + curr, 0);
                         this.votesStateSet(results_length)
+                        this.votesDriverASet(totalVotesA)
+                        this.votesDriverBset(totalVotesB)
                     },
                     (err) => {
                         console.log(err)
@@ -286,6 +305,7 @@ export class MainPage extends React.Component{
                     this.renderResults()
                   }{sessionEnded === true &&
                     renderRaceResults()
+
                   }
                </div>
                
