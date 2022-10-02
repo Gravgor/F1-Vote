@@ -19,7 +19,11 @@ export class MainPage extends React.Component{
                 firstVoteSecondDriverDateOfBirth: '',
                 firstVoteSecondDriverNumber: 0,
                 raceRound: 0,
-                standings: []
+                standings: [],
+                actualRaceResults: false,
+                actualRaceStandings: [],
+                noActualRaceResults: true,
+                sesssionEnded: false,
         }
         this.setVotes =  this.setVotes.bind(this)
     }
@@ -34,7 +38,7 @@ export class MainPage extends React.Component{
         const year = date.getFullYear();
         const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
         let newDate = date.toISOString().slice(0,10)
-        //let newDate = '2022-09-04'
+        //let newDate = '2022-09-11'
         //const dayName = 'niedziela'
         this.fetchOption(year,newDate, dayName)
     }
@@ -115,7 +119,7 @@ export class MainPage extends React.Component{
             firstVoteSecondDriver: 'Charles Lecrlec',
             firstVoteSecondDriverNumber: '16',
             firstVoteSecondDriverDateOfBirth: '16/10/1997',
-            raceRound: data.round-1,
+            raceRound: data.round,
         })
         this.fetchStanding(data.round)
     }
@@ -123,13 +127,27 @@ export class MainPage extends React.Component{
     fetchStanding(round){
         const date = new Date();
         const year = date.getFullYear();
-        fetch(`https://ergast.com/api/f1/${year}/${round-1}/driverStandings.json`)
+        fetch(`https://ergast.com/api/f1/${year}/driverStandings.json`)
         .then((res) => res.json())
         .then(result => {
             const result1 = result.MRData.StandingsTable.StandingsLists[0].DriverStandings 
             this.setState({
                 standings: result1,
             })
+        })
+        fetch(`https://ergast.com/api/f1/${year}/${round}/results.json`)
+        .then((res) => res.json())
+        .then(result => {
+            const result2 = result.MRData.RaceTable.Races[0].Results
+            if(result2.length > 0){
+                this.setState({
+                    actualRaceResults: true,
+                    actualRaceStandings: result2,
+                    sesssionEnded: true,
+                })
+            }else{
+                return;
+            }
         })
 
     }
@@ -139,8 +157,8 @@ export class MainPage extends React.Component{
 
     render(){
         const standingsLists = this.state.standings
-        console.log(standingsLists)
         const voted = this.state.userVoted
+        const sessionEnded = this.state.sesssionEnded
         const renderResults = () => {
             if(voted === true){
                 const allVotes = this.state.allVotes
@@ -189,6 +207,24 @@ export class MainPage extends React.Component{
                     )
             }
         }
+        const renderRaceResults = () => {
+            const acutalRaceStand = this.state.actualRaceStandings
+            return (
+                <div className="first-vote-container">
+                    <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results of {this.state.date} {this.state.raceName}</h1>
+                    <div className="results-container">
+                        <ul className="standings-list">
+                        {acutalRaceStand.map(item => (
+                                <li key={item.position} style={{fontFamily: 'F1-Regular'}}>Finishing position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Laps: {item.laps}, Points: {item.points}, Status: {item.status}</li>
+                            ))}
+                        </ul>
+
+                    </div>
+                </div>
+
+            )
+
+        }
         return(
              <>
                <div className="header">
@@ -198,16 +234,16 @@ export class MainPage extends React.Component{
                </div>
                <div className='content-container'>
                 <div className="container-standing">
-                    <h1 className="standings" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Standings after round {this.state.raceRound}</h1>
+                    <h1 className="standings" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Standings after round {this.state.raceRound}/22</h1>
                     <div className='standings-content'>
                         <ul className="standings-list">
                         {standingsLists.map(item => (
-                                <li key={item.position}>Position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Points: {item.points}, Constructor: {item.Constructors[0].name}</li>
+                                <li key={item.position} style={{fontFamily: 'F1-Regular'}}>Position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Points: {item.points}, Constructor: {item.Constructors[0].name}</li>
                             ))}
                         </ul>
                     </div>
                 </div>
-               {voted === false &&
+               {voted === false && sessionEnded === false &&
                  <div className='first-vote-container'>
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Who will win {this.state.date} {this.state.raceName}?</h1>
                     <div className="first-driver-container">
@@ -229,6 +265,8 @@ export class MainPage extends React.Component{
                     </div> 
                   }{
                     renderResults()
+                  }{sessionEnded === true &&
+                    renderRaceResults()
                   }
                </div>
                
