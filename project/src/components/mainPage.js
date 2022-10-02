@@ -45,6 +45,21 @@ export class MainPage extends React.Component{
         //let newDate = '2022-09-11'
         //const dayName = 'niedziela'
         this.fetchOption(year,newDate, dayName)
+        axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
+                    (res) => {
+                        const results = res.data
+                        const results_length = results.length
+                        console.log(results)
+                        const totalVotesA = results.map(item => item.driverA).reduce((prev,curr) => prev + curr, 0);
+                        const totalVotesB = results.map(item => item.driverB).reduce((prev,curr) => prev + curr, 0);
+                        this.votesStateSet(results_length)
+                        this.votesDriverASet(totalVotesA)
+                        this.votesDriverBset(totalVotesB)
+                    },
+                    (err) => {
+                        console.log(err)
+                    }
+                    )
     }
 
     fetchOption(data, date1, dayName){
@@ -185,20 +200,6 @@ export class MainPage extends React.Component{
               const firstDriverVotes = this.state.firstDriverVotes
               const secondDriverVotes = this.state.secondDriverVotes
               const allVotes = this.state.allVotes
-              axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
-                    (res) => {
-                        const results = res.data
-                        const results_length = results.length
-                        const totalVotesA = results.map(item => item.driverA).reduce((prev,curr) => prev + curr, 0);
-                        const totalVotesB = results.map(item => item.driverB).reduce((prev,curr) => prev + curr, 0);
-                        this.votesStateSet(results_length)
-                        this.votesDriverASet(totalVotesA)
-                        this.votesDriverBset(totalVotesB)
-                    },
-                    (err) => {
-                        console.log(err)
-                    }
-                    )
                     return(
                         <>
                         <div className="first-vote-container">
