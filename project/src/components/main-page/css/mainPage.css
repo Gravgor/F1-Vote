@@ -249,3 +249,19 @@ li{
     background: rgba(255, 255, 255, .1);
     margin: 5px auto;
 }
+
+.table01{
+    padding: -5px;
+    border-spacing: 6px;
+}
+.standings-list::-webkit-scrollbar{
+    width: 0px;
+}
+
+th{
+    padding-left: 120px;
+    color: rgb(128, 128, 128);
+}
+td{
+    padding-left: 120px;
+}

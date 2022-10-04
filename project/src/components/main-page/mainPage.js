@@ -47,7 +47,7 @@ export class MainPage extends React.Component{
     componentDidMount(){
         const date = new Date();
         const year = date.getFullYear();
-        const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
+       const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
         let newDate = date.toISOString().slice(0,10)
         //let newDate = '2022-09-11'
         //const dayName = 'niedziela'
@@ -175,6 +175,7 @@ export class MainPage extends React.Component{
         this.fetchStanding(data.round)
     }
 
+
     fetchStanding(round){
         const date = new Date();
         const year = date.getFullYear();
@@ -205,10 +206,25 @@ export class MainPage extends React.Component{
 
 
       renderSecondVote(){
+        const sessionEnded = this.state.sesssionEnded
+        const firstDriverVotes = this.state.firstDriverVotes
+        const secondDriverVotes = this.state.secondDriverVotes
+        const allVotes = this.state.allVotes
         return (
-            <div className="first-vote-container" style={{marginTop: '50px'}} id='second-vote'>
-                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Random vote for {this.state.date} {this.state.raceName}</h1>
-            </div>
+            <>
+             {sessionEnded === false &&
+             <div className="first-vote-container" style={{marginTop: '50px'}}>
+                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Will Max Verstappen win title on {this.state.date} {this.state.raceName}?</h1>
+                <div className="first-driver-container">
+                <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.submitVote(this.state.firstVoteDriver)}/>
+
+                </div>
+             </div>
+             }{sessionEnded === true &&
+                <div className="first-vote-container" style={{marginTop: '50px'}}>
+                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results of votes for {this.state.date} {this.state.raceName}</h1>
+            </div>}
+            </>
         )
 
       }
@@ -264,18 +280,18 @@ export class MainPage extends React.Component{
         const voted = this.state.userVoted
         const sessionEnded = this.state.sesssionEnded
         const noRace = this.state.noRaceDay
+        console.log(standingsLists)
         const renderRaceResults = () => {
             const acutalRaceStand = this.state.actualRaceStandings
             return (
-                <div className="first-vote-container">
+                <div className="first-vote-container" id='first-vote'>
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results of {this.state.date} {this.state.raceName}</h1>
                     <div className="results-container">
-                        <ul className="standings-list">
-                        {acutalRaceStand.map(item => (
+                    <ul className="standings-list">
+                    {acutalRaceStand.map(item => (
                                 <li key={item.position} style={{fontFamily: 'F1-Regular'}}>Finishing position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Laps: {item.laps}, Points: {item.points}, Status: {item.status}</li>
                             ))}
-                        </ul>
-
+                    </ul>
                     </div>
                 </div>
 
@@ -290,7 +306,7 @@ export class MainPage extends React.Component{
                 <p className="actual-grandprix" style={{fontFamily: 'F1-Regular'}}>{this.state.date} {this.state.raceName}</p>
                 <div className="link-to-votes">
                     <div className="link-to-votes-container">
-                        <Scroll.Link className="scroll-1" activeClass="active" to="first-vote" spy={true} smooth={true} offset={50} isDynamic={true}><p className="scroll-text" style={{fontFamily: 'F1-Regular'}}><FaFlagCheckered id="icon-header"></FaFlagCheckered>Winner vote</p></Scroll.Link>
+                        <Scroll.Link className="scroll-1" activeClass="active" to="first-vote" spy={true} smooth={true} offset={50} isDynamic={true}>{sessionEnded === false && <p className="scroll-text" style={{fontFamily: 'F1-Regular'}}><FaFlagCheckered id="icon-header"></FaFlagCheckered>Winner Vote</p>}{sessionEnded === true && <p className="scroll-text" style={{fontFamily: 'F1-Regular', top: '-12px'}}><FaFlagCheckered id="icon-header"></FaFlagCheckered>Race standings</p>}</Scroll.Link>
                         <Scroll.Link className="scroll-1" activeClass="active" to="first-vote" spy={true} smooth={true} offset={50} isDynamic={true}><p className="scroll-text" style={{fontFamily: 'F1-Regular'}}><GiCardRandom id="icon-header"></GiCardRandom>Random vote</p></Scroll.Link>
                     </div>
                 </div>
@@ -301,9 +317,24 @@ export class MainPage extends React.Component{
                     <h1 className="standings" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Standings after round {this.state.raceRound}/22</h1>
                     <div className='standings-content'>
                         <ul className="standings-list">
-                        {standingsLists.map(item => (
-                                <li key={item.position} style={{fontFamily: 'F1-Regular'}}>Position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Points: {item.points}, Constructor: {item.Constructors[0].name}</li>
+                        <table className="table01">
+                            <tr>
+                                <th style={{fontFamily: 'F1-Button'}}>POS</th>
+                                <th style={{fontFamily: 'F1-Button'}}>DRIVER</th>
+                                <th style={{fontFamily: 'F1-Button'}}>NATIONALITY</th>
+                                <th style={{fontFamily: 'F1-Button'}}>CAR</th>
+                                <th style={{fontFamily: 'F1-Button'}}>PTS</th>
+                            </tr>
+                            {standingsLists.map(item => (
+                                <tr>
+                                    <td style={{fontFamily: 'F1-Button',textTransform: 'uppercase'}}>{item.position}</td>
+                                    <td style={{fontFamily: 'F1-Button',color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.Driver.givenName} {item.Driver.familyName}</td>
+                                    <td style={{fontFamily: 'F1-Button', color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.Driver.nationality}</td>
+                                    <td style={{fontFamily: 'F1-Button',color: 'rgb(128, 128, 128)', fontWeight: 'bold', textTransform: 'uppercase'}}>{item.Constructors[0].name}</td>
+                                    <td style={{fontFamily: 'F1-Button' , color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.points}</td>
+                                </tr>
                             ))}
+                        </table>
                         </ul>
                     </div>
                 </div>
