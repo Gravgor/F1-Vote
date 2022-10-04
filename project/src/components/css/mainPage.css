@@ -31,10 +31,61 @@ body{
 .actual-grandprix{
     font-size: 1.5em;
     font-weight: bold;
-    margin-left: 575px;
+    margin-left: 375px;
     margin-top: -45px;
     color: #fff;
     text-transform: capitalize;
+}
+
+.link-to-votes{
+    font-weight: bold;
+    width: 300px;
+    height: 50px;
+    margin-top: -60px;
+    margin-left: 800px;
+}
+
+.link-to-votes-container{
+    margin-top: -80px;
+    display: flex;
+    flex-direction: row!important;
+    justify-content: space-between!important;
+}
+
+.scroll-1{
+    position: relative;
+    top: 25px;
+    text-align: center!important;
+    color: #fff;
+    font-size: 0.8rem;
+    margin-right: 10px;
+    height: 40px;
+    width: 200px;
+    text-transform: uppercase;
+    background-color: #242429;
+    border-radius: 5px;
+}
+
+.scroll-1:hover{
+    transition: 0.2s ease-in;
+    -webkit-transition: 0.2s ease-in;
+    -moz-transition: 0.2s ease-in;
+    -o-transition: 0.2s ease-in;
+    -ms-transition: 0.2s ease-in;
+    background-color: #38383F;
+    cursor: pointer;
+}
+.scroll-text{
+
+    position: relative;
+    top: -8px;
+    padding: 5px;
+}
+
+#icon-header{
+    position: relative;
+    left: -4px;
+    top: 1px;
 }
 
 /* header end */
@@ -65,8 +116,8 @@ body{
 
 .sign-in-admin{
     float: right;
-    margin-top: -55px;
-    margin-right: 165px;
+    margin-top: -25px;
+    margin-right: 80px;
     font-size: 1rem;
     color: #fff;
     font-weight: bold;

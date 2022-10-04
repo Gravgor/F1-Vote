@@ -1,8 +1,12 @@
 import React from "react";
-import { BiUser } from "react-icons/bi"
+import { BiUser } from "react-icons/bi";
+import {FaFlagCheckered} from "react-icons/fa";
+import {GiCardRandom} from "react-icons/gi";
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
 import { NoRace } from "./noRacePage";
+import * as Scroll from 'react-scroll';
+
 
 export class MainPage extends React.Component{
     constructor(props){
@@ -100,7 +104,7 @@ export class MainPage extends React.Component{
                         }
                     }else{
                         this.setState({
-                            noRaceDay: true
+                            noRaceDay: false
                         })
                     }
             }
@@ -117,7 +121,6 @@ export class MainPage extends React.Component{
                 allVotes: state,
             })
         }else if(state === 'true'){
-            console.log(state)
             this.setState({
                 userVoted: state,
             })
@@ -154,6 +157,7 @@ export class MainPage extends React.Component{
         })
     }
     this.votesStateSet('true')
+    window.sessionStorage.setItem('voted',true)
 }
 
 
@@ -196,9 +200,18 @@ export class MainPage extends React.Component{
                 return;
             }
         })
-
     }
 
+
+
+      renderSecondVote(){
+        return (
+            <div className="first-vote-container" style={{marginTop: '60px'}} id='second-vote'>
+                <p> s</p>
+            </div>
+        )
+
+      }
 
       renderResults(){
               const firstDriverVotes = this.state.firstDriverVotes
@@ -267,15 +280,20 @@ export class MainPage extends React.Component{
                 </div>
 
             )
-
         }
         return(
              <>
              {noRace === false &&
              <div>
                <div className="header">
-                <h1 className="page-title" style={{fontFamily: 'F1-Regular'}}>F1 Vote for Winner -</h1>
+                <h1 className="page-title" style={{fontFamily: 'F1-Regular'}}>F1 Vote -</h1>
                 <p className="actual-grandprix" style={{fontFamily: 'F1-Regular'}}>{this.state.date} {this.state.raceName}</p>
+                <div className="link-to-votes">
+                    <div className="link-to-votes-container">
+                        <Scroll.Link className="scroll-1" activeClass="active" to="first-vote" spy={true} smooth={true} offset={50} isDynamic={true}><p className="scroll-text" style={{fontFamily: 'F1-Regular'}}><FaFlagCheckered id="icon-header"></FaFlagCheckered>Winner vote</p></Scroll.Link>
+                        <Scroll.Link className="scroll-1" activeClass="active" to="first-vote" spy={true} smooth={true} offset={50} isDynamic={true}><p className="scroll-text" style={{fontFamily: 'F1-Regular'}}><GiCardRandom id="icon-header"></GiCardRandom>Random vote</p></Scroll.Link>
+                    </div>
+                </div>
                 <button className="sign-in-admin" style={{fontFamily: 'F1-Button'}}><BiUser style={{position: 'relative', top: '2px'}}/> Sign In</button>
                </div>
                <div className='content-container'>
@@ -292,7 +310,7 @@ export class MainPage extends React.Component{
                {voted === 'false' && sessionEnded === false &&
                  <div className='first-vote-container'>
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Who will win {this.state.date} {this.state.raceName}?</h1>
-                    <div className="first-driver-container">
+                    <div className="first-driver-container" id='first-vote'>
                           <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.submitVote(this.state.firstVoteDriver)}/>
                        <div className="first-driver-info-content">
                           <h3 className="first-driver-name" style={{fontFamily: 'F1-Regular', marginLeft: '20px' }}>Driver name: {this.state.firstVoteDriver}</h3>
@@ -313,7 +331,7 @@ export class MainPage extends React.Component{
                     this.renderResults()
                   }{sessionEnded === true &&
                     renderRaceResults()
-                  }
+                  }{this.renderSecondVote()}
                       </div>
                   </div>
              }{noRace === true &&
