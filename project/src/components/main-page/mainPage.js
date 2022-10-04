@@ -47,10 +47,10 @@ export class MainPage extends React.Component{
     componentDidMount(){
         const date = new Date();
         const year = date.getFullYear();
-       const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
-        let newDate = date.toISOString().slice(0,10)
-        //let newDate = '2022-09-11'
-        //const dayName = 'niedziela'
+        //const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
+        //let newDate = date.toISOString().slice(0,10)
+        let newDate = '2022-09-11'
+        const dayName = 'niedziela'
         this.fetchOption(year,newDate, dayName)
         axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
                     (res) => {
@@ -204,7 +204,7 @@ export class MainPage extends React.Component{
     }
 
 
-
+///TODO: Implement voting for Max Verstappen becoming champion to the next race. Implement results of both voting after race session is ended!
       renderSecondVote(){
         const sessionEnded = this.state.sesssionEnded
         const firstDriverVotes = this.state.firstDriverVotes
@@ -280,7 +280,6 @@ export class MainPage extends React.Component{
         const voted = this.state.userVoted
         const sessionEnded = this.state.sesssionEnded
         const noRace = this.state.noRaceDay
-        console.log(standingsLists)
         const renderRaceResults = () => {
             const acutalRaceStand = this.state.actualRaceStandings
             return (
@@ -288,9 +287,24 @@ export class MainPage extends React.Component{
                     <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results of {this.state.date} {this.state.raceName}</h1>
                     <div className="results-container">
                     <ul className="standings-list">
-                    {acutalRaceStand.map(item => (
-                                <li key={item.position} style={{fontFamily: 'F1-Regular'}}>Finishing position: {item.position}, Driver: {item.Driver.givenName} {item.Driver.familyName}, Laps: {item.laps}, Points: {item.points}, Status: {item.status}</li>
-                            ))}
+                     <table className="table01">
+                        <tr>
+                            <th style={{fontFamily: 'F1-Regular'}}>POS</th>
+                            <th style={{fontFamily: 'F1-Regular'}}>DRIVER</th>
+                            <th style={{fontFamily: 'F1-Regular'}}>LAPS</th>
+                            <th style={{fontFamily: 'F1-Regular'}}>PTS</th>
+                            <th style={{fontFamily: 'F1-Regular'}}>STATUS</th>
+                        </tr>
+                        {acutalRaceStand.map(item => (
+                            <tr>
+                                <td style={{fontFamily: 'F1-Button',textTransform: 'uppercase'}}>{item.position}</td>
+                                <td style={{fontFamily: 'F1-Button',color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.Driver.givenName} {item.Driver.familyName}</td>
+                                <td style={{fontFamily: 'F1-Button',color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.laps}</td>
+                                <td style={{fontFamily: 'F1-Button',color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.points}</td>
+                                <td style={{fontFamily: 'F1-Button',color: 'rgb(74, 74, 74)', fontWeight: 'bold'}}>{item.status}</td>
+                            </tr>
+                        ))}
+                     </table>
                     </ul>
                     </div>
                 </div>
