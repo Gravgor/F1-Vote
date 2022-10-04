@@ -206,8 +206,8 @@ export class MainPage extends React.Component{
 
       renderSecondVote(){
         return (
-            <div className="first-vote-container" style={{marginTop: '60px'}} id='second-vote'>
-                <p> s</p>
+            <div className="first-vote-container" style={{marginTop: '50px'}} id='second-vote'>
+                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Random vote for {this.state.date} {this.state.raceName}</h1>
             </div>
         )
 

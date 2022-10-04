@@ -1,5 +1,5 @@
 import React from 'react'
-import { MainPage } from './components/mainPage'
+import { MainPage } from './components/main-page/mainPage'
 import { AdminPanelLogin } from './components/admin-panel/adminLogin';
 
 import {
