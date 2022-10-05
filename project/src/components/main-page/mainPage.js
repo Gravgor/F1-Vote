@@ -15,6 +15,7 @@ export class MainPage extends React.Component{
                 raceName: "",
                 date: new Date().getFullYear(),
                 userVoted: 'false',
+                userVote2: 'false',
                 firstDriverVotes: 0,
                 secondDriverVotes: 0,
                 allVotes: 0,
@@ -33,6 +34,7 @@ export class MainPage extends React.Component{
                 noRaceDay: false,
         }
         this.submitVote = this.submitVote.bind(this);
+        this.submitVote2 = this.submitVote2.bind(this);
         this.votesStateSet = this.votesStateSet.bind(this);
         this.votesDriverASet = this.votesDriverASet.bind(this);
         this.votesDriverBset = this.votesDriverBset.bind(this);
@@ -47,10 +49,10 @@ export class MainPage extends React.Component{
     componentDidMount(){
         const date = new Date();
         const year = date.getFullYear();
-        //const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
-        //let newDate = date.toISOString().slice(0,10)
-        let newDate = '2022-09-11'
-        const dayName = 'niedziela'
+        const dayName = date.toLocaleDateString('pl-PL', {weekday: 'long'});
+        let newDate = date.toISOString().slice(0,10)
+        //let newDate = '2022-10-07'
+        //const dayName = 'piątek'
         this.fetchOption(year,newDate, dayName)
         axios.get('https://6339bfb9383946bc7ff8296d.mockapi.io/voting').then(
                     (res) => {
@@ -161,6 +163,27 @@ export class MainPage extends React.Component{
 }
 
 
+  submitVote2(value){
+    if(value === true){
+        axios
+        .post('https://6339bfb9383946bc7ff8296d.mockapi.io/random-voting',{
+           yes: value
+        })
+        this.setState({
+           userVote2: 'true',
+        })
+    }else{
+        axios
+        .post('https://6339bfb9383946bc7ff8296d.mockapi.io/random-voting',{
+           false: value
+        })
+        this.setState({
+           userVote2: 'true',
+        })
+    }
+  }
+
+
     displayData(data){
         this.setState({
             raceName: data.raceName,
@@ -210,20 +233,31 @@ export class MainPage extends React.Component{
         const firstDriverVotes = this.state.firstDriverVotes
         const secondDriverVotes = this.state.secondDriverVotes
         const allVotes = this.state.allVotes
+        const userVote2 = this.state.userVote2
         return (
             <>
-             {sessionEnded === false &&
+             {userVote2 === 'false' && sessionEnded === false &&
              <div className="first-vote-container" style={{marginTop: '50px'}}>
-                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Will Max Verstappen win title on {this.state.date} {this.state.raceName}?</h1>
-                <div className="first-driver-container">
-                <img className="image-driver" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.submitVote(this.state.firstVoteDriver)}/>
-
+                  <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Random votes for {this.state.date} {this.state.raceName}?</h1>
+               <div className="first-driver-container">
+                <img className="image-driver1" src="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/jcr:content/image.img.1920.medium.jpg/1646819045507.jpg" alt={this.state.firstVoteDriver} onClick={() => this.submitVote2(true)}/>
+                <p style={{fontFamily: 'F1-Regular'}}>Will {this.state.firstVoteDriver} become <span style={{color: '#F7D40F'}}>champion</span> on {this.state.date} {this.state.raceName}?</p>
+                <div className="buttons-submit">
+                    <button className="button-vote" onClick={(e) => this.submitVote2(true)}>YES</button>
+                    <button className="button-vote" onClick={(e) => this.submitVote2(false)}>NO</button>
+                </div>
                 </div>
              </div>
-             }{sessionEnded === true &&
+             }{userVote2 === 'false' && sessionEnded === true &&
                 <div className="first-vote-container" style={{marginTop: '50px'}}>
                 <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results of votes for {this.state.date} {this.state.raceName}</h1>
             </div>}
+            {userVote2 === 'true' && sessionEnded === false &&
+             <div className="first-vote-container" style={{marginTop: '50px'}}>
+                <p>Results will be show after session end</p>
+             </div>
+            
+            }
             </>
         )
 
