@@ -106,7 +106,7 @@ export class MainPage extends React.Component{
                         }
                     }else{
                         this.setState({
-                            noRaceDay: false
+                            noRaceDay: true
                         })
                     }
             }
