@@ -104,7 +104,8 @@ body{
     height: 300px;
     border-radius: 25px;
     border: 4px solid #E10600;
-    animation: first-vote-container 5s infinite linear
+    animation: first-vote-container 5s infinite linear;
+    
 }
 
 .container-standing{
