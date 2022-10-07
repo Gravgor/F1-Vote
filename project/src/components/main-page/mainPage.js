@@ -255,7 +255,7 @@ export class MainPage extends React.Component{
             </div>}
             {userVote2 === 'true' && sessionEnded === false &&
              <div className="first-vote-container" style={{marginTop: '50px'}}>
-                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center'}}>Results will be shown after {this.state.date} {this.state.raceName} end.</h1>
+                <h1 className="container-title" style={{fontFamily: 'F1-Regular', textAlign: 'center', marginTop: '40px'}}>Results will be shown after {this.state.date} {this.state.raceName} end.</h1>
              </div>
             
             }
