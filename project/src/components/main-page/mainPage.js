@@ -161,6 +161,7 @@ export class MainPage extends React.Component{
     }
     this.votesStateSet('true')
     window.sessionStorage.setItem('voted',true)
+    driver = '';
 }
 
 
@@ -194,7 +195,7 @@ export class MainPage extends React.Component{
             firstVoteSecondDriver: 'Charles Lecrlec',
             firstVoteSecondDriverNumber: '16',
             firstVoteSecondDriverDateOfBirth: '16/10/1997',
-            raceRound: data.round,
+            raceRound: data.round-1,
         })
         this.fetchStanding(data.round)
     }
