@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/F1-Vote/static/css/main.c96ce3f0.css",
+    "main.js": "/F1-Vote/static/js/main.ee0f30bd.js",
+    "static/media/Formula1-Black.ttf": "/F1-Vote/static/media/Formula1-Black.1c75fea82fc1e7458b40.ttf",
+    "static/media/Formula1-Wide.ttf": "/F1-Vote/static/media/Formula1-Wide.8e2a3df21501da2e09fa.ttf",
+    "static/media/Formula1-Regular.ttf": "/F1-Vote/static/media/Formula1-Regular.0f4e3d54644717199c6f.ttf",
+    "static/media/Formula1-Bold.ttf": "/F1-Vote/static/media/Formula1-Bold.a1d6ae91f3373c37e162.ttf",
+    "static/media/TitilliumWeb-Regular.ttf": "/F1-Vote/static/media/TitilliumWeb-Regular.e53e0538893d432e0635.ttf",
+    "index.html": "/F1-Vote/index.html",
+    "main.c96ce3f0.css.map": "/F1-Vote/static/css/main.c96ce3f0.css.map",
+    "main.ee0f30bd.js.map": "/F1-Vote/static/js/main.ee0f30bd.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c96ce3f0.css",
+    "static/js/main.ee0f30bd.js"
+  ]
+}
